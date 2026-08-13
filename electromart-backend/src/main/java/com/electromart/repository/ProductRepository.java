@@ -15,4 +15,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findTop8ByFeaturedTrueAndActiveTrue();
     List<Product> findTop8ByActiveTrueOrderByCreatedAtDesc();
     Page<Product> findByCategoryIdAndActiveTrue(Long categoryId, Pageable pageable);
+    List<Product> findTop8ByCategoryIdAndActiveTrueAndIdNotOrderByRatingDesc(Long categoryId, Long excludeId);
 }
