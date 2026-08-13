@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ProductResponse create(ProductRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> ResourceNotFoundException.of("Category", request.getCategoryId()));
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ProductResponse update(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Product", id));
@@ -78,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public void delete(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Product", id));
@@ -91,12 +91,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponse getById(Long id) {
         return ProductMapper.toResponse(productRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Product", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PagedResponse<ProductResponse> search(String keyword, String category, String brand,
                                                    BigDecimal minPrice, BigDecimal maxPrice,
                                                    BigDecimal minRating, Pageable pageable) {
@@ -107,18 +109,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> getFeatured() {
         return productRepository.findTop8ByFeaturedTrueAndActiveTrue().stream()
                 .map(ProductMapper::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> getLatest() {
         return productRepository.findTop8ByActiveTrueOrderByCreatedAtDesc().stream()
                 .map(ProductMapper::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> getRelated(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Product", id));

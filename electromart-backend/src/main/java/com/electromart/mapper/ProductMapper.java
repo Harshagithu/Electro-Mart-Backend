@@ -1,10 +1,10 @@
 package com.electromart.mapper;
 
+import java.math.BigDecimal;
+
 import com.electromart.dto.response.ProductResponse;
 import com.electromart.entity.Product;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.electromart.util.PriceUtils;
 
 public final class ProductMapper {
 
@@ -12,12 +12,7 @@ public final class ProductMapper {
 
     public static ProductResponse toResponse(Product product) {
         if (product == null) return null;
-
-        BigDecimal discount = product.getPrice()
-                .multiply(product.getDiscountPercentage())
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-        BigDecimal discountedPrice = product.getPrice().subtract(discount);
-
+        BigDecimal discountedPrice = PriceUtils.discountedPrice(product);
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
