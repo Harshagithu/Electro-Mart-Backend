@@ -15,14 +15,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByUserId(Long userId, Pageable pageable);
     Optional<Order> findByIdAndUserId(Long id, Long userId);
     Optional<Order> findByOrderNumber(String orderNumber);
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
     long countByStatus(OrderStatus status);
     long countByCreatedAtAfter(LocalDateTime start);
 
-    // The one @Query in this whole layer — it's JPQL (queries entity fields
-    // like `o.totalAmount`, not table/column names), not raw SQL, so it's
-    // still within "let Spring Data do the querying." Derived method names
-    // can't express an aggregate sum, which is the only reason this isn't
-    // a findBy... method like everything else here.
     @Query("select coalesce(sum(o.totalAmount), 0) from Order o where o.status = 'DELIVERED'")
     BigDecimal sumRevenueFromDeliveredOrders();
 }
