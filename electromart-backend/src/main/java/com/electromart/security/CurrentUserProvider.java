@@ -1,5 +1,7 @@
 package com.electromart.security;
 
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,4 +24,15 @@ public class CurrentUserProvider {
         return userRepository.findByEmail(principal.getEmail())
                 .orElseThrow(() -> new IllegalStateException("Authenticated user no longer exists"));
     }
+    
+    // Add this method alongside getCurrentUser():
+    public Optional<User> tryGetCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || !(authentication.getPrincipal() instanceof UserPrincipal principal)) {
+            return java.util.Optional.empty();
+        }
+        return userRepository.findByEmail(principal.getEmail());
+    }
+    
 }
