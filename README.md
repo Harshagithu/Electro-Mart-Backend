@@ -1,4 +1,7 @@
 
+API Endpoints:-
+---------------
+
 1. Authentication Module :-
 ----------------------------
 
